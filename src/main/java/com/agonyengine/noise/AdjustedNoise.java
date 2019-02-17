@@ -5,7 +5,11 @@ public class AdjustedNoise implements NoiseGenerator {
                                                         // effective range of this noise. This multiplier
                                                         // will scale it to approximately -1 to 1.
 
-    private OpenSimplexNoise noise = new OpenSimplexNoise();
+    private final OpenSimplexNoise noise;
+
+    public AdjustedNoise(long seed) {
+        noise = new OpenSimplexNoise(seed);
+    }
 
     /**
      * Use the raw noise as a base, but adjust it to a range of approximately 0 to 1.0.

@@ -4,12 +4,15 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Random;
 
 public class ImageGenerator {
     private static final int HEIGHT = 1024;
     private static final int WIDTH = 1024;
+    private static final Random RANDOM = new SecureRandom();
 
-    private AdjustedNoise adjustedNoise = new AdjustedNoise();
+    private AdjustedNoise adjustedNoise = new AdjustedNoise(RANDOM.nextLong());
     private MaxNoise maxNoise = new MaxNoise();
 
     public static void main(String... args) throws IOException {
@@ -45,13 +48,20 @@ public class ImageGenerator {
      * @throws IOException If draw() throws an IOException.
      */
     private void generateFractalBrownianMotion() throws IOException {
-        final double maxValue = fbmNoise(0, 0, maxNoise); // the max value of the FBM noise
+        final FbmParameters parameters = new FbmParameters(
+                0.004,
+                1.0,
+                2.1042,
+                0.5,
+                6
+        );
+        final double maxValue = fbmNoise(parameters, 0, 0, maxNoise); // the max value of the FBM noise
 
         double[][] noises = new double[WIDTH][HEIGHT];
 
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
-                noises[x][y] = rescale(fbmNoise(x - WIDTH, y - HEIGHT), 0, maxValue, 0, 1.0);
+                noises[x][y] = rescale(fbmNoise(parameters, x - WIDTH, y - HEIGHT), 0, maxValue, 0, 1.0);
             }
         }
 
@@ -72,9 +82,9 @@ public class ImageGenerator {
                 int value = (int)(noises[x][y] * 0xFF);
                 int rgb = 0xFF000000;
 
-                if (value < 110) {
+                if (value < 130) {
                     rgb = rgb | (value); // blue
-                } else if (value < 198) {
+                } else if (value < 175) {
                     rgb = rgb | (value << 8); // green
                 } else {
                     rgb = rgb | (value); // blue
@@ -92,38 +102,34 @@ public class ImageGenerator {
     /**
      * Sample FBM noise for one location using the AdjustedNoise instance.
      *
+     * @param parameters The parameters to use for FBM.
      * @param x The position on the X axis to sample.
      * @param y The position on the Y axis to sample.
      * @return The raw noise value. It is not normalized or scaled.
      */
-    private double fbmNoise(double x, double y) {
-        return fbmNoise(x, y, adjustedNoise);
+    private double fbmNoise(FbmParameters parameters, double x, double y) {
+        return fbmNoise(parameters, x, y, adjustedNoise);
     }
 
     /**
      * Sample FBM noise for one location.
      *
+     * @param parameters The parameters to use for FBM.
      * @param x The position on the X axis to sample.
      * @param y The position on the Y axis to sample.
      * @param noise The noise generator to use.
      * @return The raw noise value. It is not normalized or scaled.
      */
-    private double fbmNoise(double x, double y, NoiseGenerator noise) {
-        final double baseFrequency = 0.008; // starting frequency, smaller values zoom in
-        final double baseAmplitude = 1.0; // starting amplitude
-        final double lacunarity = 2.1042; // how the frequency changes in each octave (usually > 1)
-        final double persistence = 0.5; // how the amplitude changes in each octave (usually < 1)
-        final int octaves = 6; // the number of octaves to compute
-
+    private double fbmNoise(FbmParameters parameters, double x, double y, NoiseGenerator noise) {
         double total = 0.0;
-        double frequency = baseFrequency;
-        double amplitude = baseAmplitude;
+        double frequency = parameters.getBaseFrequency();
+        double amplitude = parameters.getBaseAmplitude();
 
-        for (int i = 0; i < octaves; i++) {
+        for (int i = 0; i < parameters.getOctaves(); i++) {
             total += amplitude * noise.eval(x * frequency, y * frequency);
 
-            frequency *= lacunarity;
-            amplitude *= persistence;
+            frequency *= parameters.getLacunarity();
+            amplitude *= parameters.getPersistence();
         }
 
         return total;
