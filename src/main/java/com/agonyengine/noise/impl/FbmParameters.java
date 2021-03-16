@@ -1,13 +1,13 @@
-package com.agonyengine.noise;
+package com.agonyengine.noise.impl;
 
 public class FbmParameters {
-    private double baseFrequency;
-    private double baseAmplitude;
-    private double lacunarity;
-    private double persistence;
-    private int octaves;
+    private final double baseFrequency;
+    private final double baseAmplitude;
+    private final double lacunarity;
+    private final double persistence;
+    private final int octaves;
 
-    public FbmParameters(double baseFrequency, double baseAmplitude, double lacunarity, double persistence, int octaves) {
+    public FbmParameters(final double baseFrequency, final double baseAmplitude, final double lacunarity, final double persistence, final int octaves) {
         this.baseFrequency = baseFrequency; // starting frequency, smaller values zoom in
         this.baseAmplitude = baseAmplitude; // starting amplitude
         this.lacunarity = lacunarity; // how the frequency changes in each octave (usually > 1)
