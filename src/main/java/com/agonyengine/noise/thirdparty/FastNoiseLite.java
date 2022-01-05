@@ -53,14 +53,10 @@
 // /*FNLfloat*/ double
 
 // Modifications by Peter Keeler
-// 3/2021 - Use doubles instead of floats
+// 03/2021 - Use doubles instead of floats
+// 01/2022 - Incorporate change from original author: mPingPongStength => mPingPongStrength
 
 package com.agonyengine.noise.thirdparty;
-
-import com.agonyengine.noise.NoiseGenerator;
-import com.agonyengine.noise.NoiseMap;
-
-import java.util.Random;
 
 public class FastNoiseLite
 {
@@ -136,7 +132,7 @@ public class FastNoiseLite
     private float mLacunarity = 2.0f;
     private float mGain = 0.5f;
     private float mWeightedStrength = 0.0f;
-    private float mPingPongStength = 2.0f;
+    private float mPingPongStrength = 2.0f;
 
     private float mFractalBounding = 1 / 1.75f;
 
@@ -213,7 +209,7 @@ public class FastNoiseLite
     public void SetFractalType(FractalType fractalType) { mFractalType = fractalType; }
 
     /// <summary>
-    /// Sets octave count for all fractal noise types 
+    /// Sets octave count for all fractal noise types
     /// </summary>
     /// <remarks>
     /// Default: 3
@@ -259,7 +255,7 @@ public class FastNoiseLite
     /// <remarks>
     /// Default: 2.0
     /// </remarks>
-    public void SetFractalPingPongStrength(float pingPongStrength) { mPingPongStength = pingPongStrength; }
+    public void SetFractalPingPongStrength(float pingPongStrength) { mPingPongStrength = pingPongStrength; }
 
 
     /// <summary>
@@ -284,7 +280,7 @@ public class FastNoiseLite
     /// <remarks>
     /// Default: 1.0
     /// Note: Setting this higher than 1 will cause artifacts
-    /// </remarks> 
+    /// </remarks>
     public void SetCellularJitter(float cellularJitter) { mCellularJitterModifier = cellularJitter; }
 
 
@@ -879,7 +875,7 @@ public class FastNoiseLite
     }
 
 
-    // Fractal PingPong 
+    // Fractal PingPong
 
     private float GenFractalPingPong(/*FNLfloat*/ double x, /*FNLfloat*/ double y)
     {
@@ -889,7 +885,7 @@ public class FastNoiseLite
 
         for (int i = 0; i < mOctaves; i++)
         {
-            float noise = PingPong((GenNoiseSingle(seed++, x, y) + 1) * mPingPongStength);
+            float noise = PingPong((GenNoiseSingle(seed++, x, y) + 1) * mPingPongStrength);
             sum += (noise - 0.5f) * 2 * amp;
             amp *= Lerp(1.0f, noise, mWeightedStrength);
 
@@ -909,7 +905,7 @@ public class FastNoiseLite
 
         for (int i = 0; i < mOctaves; i++)
         {
-            float noise = PingPong((GenNoiseSingle(seed++, x, y, z) + 1) * mPingPongStength);
+            float noise = PingPong((GenNoiseSingle(seed++, x, y, z) + 1) * mPingPongStrength);
             sum += (noise - 0.5f) * 2 * amp;
             amp *= Lerp(1.0f, noise, mWeightedStrength);
 
@@ -1519,7 +1515,7 @@ public class FastNoiseLite
         {
             distance0 = FastSqrt(distance0);
 
-            if (mCellularReturnType != CellularReturnType.CellValue)
+            if (mCellularReturnType != CellularReturnType.Distance)
             {
                 distance1 = FastSqrt(distance1);
             }
@@ -1672,7 +1668,7 @@ public class FastNoiseLite
         {
             distance0 = FastSqrt(distance0);
 
-            if (mCellularReturnType != CellularReturnType.CellValue)
+            if (mCellularReturnType != CellularReturnType.Distance)
             {
                 distance1 = FastSqrt(distance1);
             }

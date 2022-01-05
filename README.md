@@ -1,6 +1,6 @@
 # agony-noise
 
-I needed a sandbox for playing with some procedural generation techniques and to experiment with ways of structuring the code so it isn't a complete nightmare to work with.
+I needed a sandbox for playing with some procedural generation techniques and to experiment with ways of structuring the code so that it isn't a complete nightmare to work with.
 
 This isn't meant to be a drop-in library for doing Fractal Brownian Motion. It's just a project for me to test stuff I might port into a real game later. It might also be useful if you are trying to implement FBM yourself and need an example to look at.
 
@@ -10,14 +10,20 @@ I learned a lot of this by reading everything I could find on the subject, but i
 
 ## Compiling
 
-```java
+```bash
 ./gradlew clean build
 ```
 
 ## Running
 
-```java
-java -cp build/libs/agony-noise-0.2.0-SNAPSHOT.jar com.agonyengine.noise.Main
+If you're lazy:  
+```bash
+./gradlew run
+```
+
+If you want to be sure it's doing what you think it is:  
+```bash
+java -cp build/libs/agony-noise-0.2.1-SNAPSHOT.jar com.agonyengine.noise.Main
 ```
 
 You should see a new PNG image appear in your project after a few seconds when it runs. If it's not what you wanted, tweak the parameters in the source and try again.
