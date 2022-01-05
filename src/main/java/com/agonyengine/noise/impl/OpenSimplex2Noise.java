@@ -4,9 +4,6 @@ import com.agonyengine.noise.NoiseGenerator;
 import com.agonyengine.noise.NoiseMap;
 import com.agonyengine.noise.thirdparty.FastNoiseLite;
 
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-
 public class OpenSimplex2Noise implements NoiseGenerator {
     private final FastNoiseLite noiseGenerator = new FastNoiseLite();
 
@@ -16,8 +13,9 @@ public class OpenSimplex2Noise implements NoiseGenerator {
 
     @Override
     public NoiseMap generate(final String seedPrefix, final int width, final int height) {
-        final SecureRandom random = new SecureRandom(seedPrefix.getBytes(StandardCharsets.UTF_8));
         final double[][] map = new double[width][height];
+
+        noiseGenerator.SetSeed(seedPrefix.hashCode());
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
