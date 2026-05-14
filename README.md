@@ -1,3 +1,6 @@
+# MOVED
+New repo: https://git.keeler.world/scion/agony-noise
+
 # agony-noise
 
 I needed a sandbox for playing with some procedural generation techniques and to experiment with ways of structuring the code so that it isn't a complete nightmare to work with.
